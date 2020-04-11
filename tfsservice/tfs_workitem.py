@@ -35,6 +35,10 @@ class TfsWorkitem:
     @property
     def parent_id(self):
         return self.__parent_id
+    
+    @property
+    def item_url(self):
+        return self.__wi.url
 
     def __getitem__(self, key):
         return self.__wi[key]

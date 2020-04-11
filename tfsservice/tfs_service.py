@@ -235,16 +235,52 @@ class TfsService:
             return None
 
     #### https://devopshq.github.io/tfs/advanced.html ####
+    ##### https://docs.microsoft.com/ru-ru/rest/api/azure/devops/wit/?view=azure-devops-rest-5.0 ######
 
+    # System.LinkTypes.Hierarchy-Reverse
+    def add_parent_link(self, source_workitem, dest_workitem):
+        '''Add parent link from source workitem to destination workitem
+
+        Parameters:
+            source_workitem (TfsWorkitem): Source workitem
+            dest_workitem (TfsWorkitem): Destination workitem
+        
+        Returns:
+            Result (Boolean): True if parent link was added, False overwise
+        '''
+
+        if not self.__is_connected:
+            raise NameError('Disconnected from TFS Service')
+        
+        # https://marinaliu.visualstudio.com/Git2/_apis/wit/workitems/$Task?api-version=4.1
+        url = '{}/{}/_apis/wit/workitems/{}'.format(self.__tfs_server, self.__tfs_project, source_workitem.id)
+        data = '''
+        {
+            "op": "add",
+            "path": "/relations/-",
+            "value": {
+                "rel": "System.LinkTypes.Hierarchy-Reverse",
+                "url": "{}"
+            }
+        }
+        '''.format(dest_workitem.url)
+
+        payload = { 'api-version': '1.0'}
+
+        if self.__tfs_client.rest_client.send_post(url, data, payload=payload):
+            return True
+        else:
+            return False
+
+    # System.LinkTypes.Hierarchy-Forward
     def add_child_link(self, source_workitem, dest_workitem):
         raise NotImplementedError('TfsService::add_child_link')
 
-    def add_parent_link(self, source_workitem, dest_workitem):
-        raise NotImplementedError('TfsService::add_parent_link')
-
+    # Microsoft.VSTS.Common.Affects-Forward
     def add_affect_link(self, source_workitem, dest_workitem):
         raise NotImplementedError('TfsService::add_affect_link')
 
+    # Microsoft.VSTS.Common.Affects-Reverse
     def add_affected_by_link(self, source_workitem, dest_workitem):
         raise NotImplementedError('TfsService::add_affected_by_link')
 
