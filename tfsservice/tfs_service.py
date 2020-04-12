@@ -243,7 +243,7 @@ class TfsService:
         uri = '{}/{}/_apis/wit/workitems/{}'.format(self.__tfs_server, self.__tfs_project, source_id)
         
         # Additional parameters
-        payload = { 'api-version': '4.1'}
+        payload = { 'api-version': '4.1' }
 
         return self.__tfs_client.rest_client.send_post(uri, data, payload=payload)
 
