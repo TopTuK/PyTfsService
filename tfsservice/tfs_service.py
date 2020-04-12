@@ -245,7 +245,7 @@ class TfsService:
         # Additional parameters
         payload = { 'api-version': '4.1'}
 
-        return self.__tfs_client.rest_client.send_post(uri, data, payload=payload):
+        return self.__tfs_client.rest_client.send_post(uri, data, payload=payload)
 
     # System.LinkTypes.Hierarchy-Reverse
     def add_parent_link(self, source_workitem, dest_workitem):
