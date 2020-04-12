@@ -3,14 +3,13 @@ from collections import defaultdict
 
 class TfsWorkitem:
     '''TFS Workitem class (Incapsulated TFSAPI Workitem)
-    Access to propertiest with indexer [] method
+    Access to properties with indexer (['property name']) method
     '''
 
     def __init__(self, workitem):
         self.__wi = workitem
 
         self.__id = workitem.id
-        self.__title = workitem['Title']
         self.__item_type = workitem['WorkItemType']
 
         self.__parent_id = workitem.parent.id if workitem.parent else None
@@ -18,7 +17,7 @@ class TfsWorkitem:
         return
 
     def __repr__(self):
-        return str('%s %s %s' % (self.__item_type, self.__id, self.__title))
+        return str('%s %s %s' % (self.__item_type, self.__id, self.title))
 
     @property
     def id(self):
@@ -26,7 +25,11 @@ class TfsWorkitem:
 
     @property
     def title(self):
-        return self.__title
+        return self.__wi['Title']
+
+    @title.setter
+    def title(self, value):
+        self.__wi['Title'] = value
     
     @property
     def item_type(self):
