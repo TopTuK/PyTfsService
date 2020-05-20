@@ -262,16 +262,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
         
-        data = '''
-        {
-            "op": "add",
-            "path": "/relations/-",
-            "value": {
-                "rel": "System.LinkTypes.Hierarchy-Reverse",
-                "url": "{}"
-            }
-        }
-        '''.format(dest_workitem.url)
+        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "System.LinkTypes.Hierarchy-Reverse", "url": "%s" } }' % (dest_workitem.item_url)
 
         if self.__send_link_requet(source_workitem.id, data):
             return True
@@ -293,16 +284,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
-        data = '''
-        {
-            "op": "add",
-            "path": "/relations/-",
-            "value": {
-                "rel": "System.LinkTypes.Hierarchy-Forward",
-                "url": "{}"
-            }
-        }
-        '''.format(dest_workitem.url)
+        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "System.LinkTypes.Hierarchy-Forward", "url": "%s" } }' % (dest_workitem.item_url)
 
         if self.__send_link_requet(source_workitem.id, data):
             return True
@@ -324,16 +306,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
-        data = '''
-        {
-            "op": "add",
-            "path": "/relations/-",
-            "value": {
-                "rel": "Microsoft.VSTS.Common.Affects-Forward",
-                "url": "{}"
-            }
-        }
-        '''.format(dest_workitem.url)
+        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "Microsoft.VSTS.Common.Affects-Forward", "url": "%s" } }' % (dest_workitem.item_url)
 
         if self.__send_link_requet(source_workitem.id, data):
             return True
@@ -355,16 +328,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
-        data = '''
-        {
-            "op": "add",
-            "path": "/relations/-",
-            "value": {
-                "rel": "Microsoft.VSTS.Common.Affects-Reverse",
-                "url": "{}"
-            }
-        }
-        '''.format(dest_workitem.url)
+        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "Microsoft.VSTS.Common.Affects-Reverse", "url": "%s" } }' % (dest_workitem.item_url)
 
         if self.__send_link_requet(source_workitem.id, data):
             return True
