@@ -20,6 +20,10 @@ class TfsWorkitem:
         return str('%s %s %s' % (self.__item_type, self.__id, self.title))
 
     @property
+    def raw_item(self):
+        return self.__wi
+
+    @property
     def id(self):
         return self.__id
 
@@ -42,6 +46,10 @@ class TfsWorkitem:
     @property
     def item_url(self):
         return self.__wi.url
+    
+    @property
+    def item_fields(self):
+        return self.__wi.field_names
 
     def __getitem__(self, key):
         return self.__wi[key]
@@ -102,3 +110,39 @@ class TfsWorkitem:
             return res
         else:
             return None
+    
+    # System.LinkTypes.Hierarchy-Reverse
+    def add_parent_link(self, dest_wi):
+        relation = [{
+            'rel': 'System.LinkTypes.Hierarchy-Reverse',
+            'url': dest_wi.item_url,
+        }]
+
+        self.__wi.add_relations_raw(relation)
+    
+    # System.LinkTypes.Hierarchy-Forward
+    def add_child_link(self, dest_wi):
+        relation = [{
+            'rel': 'System.LinkTypes.Hierarchy-Forward',
+            'url': dest_wi.item_url,
+        }]
+
+        self.__wi.add_relations_raw(relation)
+
+    # Microsoft.VSTS.Common.Affects-Forward
+    def add_affect_link(self, dest_wi):
+        relation = [{
+            'rel': 'Microsoft.VSTS.Common.Affects-Forward',
+            'url': dest_wi.item_url,
+        }]
+
+        self.__wi.add_relations_raw(relation)
+
+    # Microsoft.VSTS.Common.Affects-Reverse
+    def add_affected_by_link(self, dest_wi):
+        relation = [{
+            'rel': 'Microsoft.VSTS.Common.Affects-Reverse',
+            'url': dest_wi.item_url,
+        }]
+
+        self.__wi.add_relations_raw(relation)

@@ -237,16 +237,6 @@ class TfsService:
     #### https://devopshq.github.io/tfs/advanced.html ####
     ##### https://docs.microsoft.com/ru-ru/rest/api/azure/devops/wit/?view=azure-devops-rest-5.0 ######
 
-    def __send_link_requet(self, source_id, data):
-        ''' Create relations between 2 items '''
-        # Request URI 
-        uri = '{}/{}/_apis/wit/workitems/{}'.format(self.__tfs_server, self.__tfs_project, source_id)
-        
-        # Additional parameters
-        payload = { 'api-version': '4.1' }
-
-        return self.__tfs_client.rest_client.send_post(uri, data, payload=payload)
-
     # System.LinkTypes.Hierarchy-Reverse
     def add_parent_link(self, source_workitem, dest_workitem):
         '''Add parent link from source workitem to destination workitem
@@ -262,9 +252,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
         
-        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "System.LinkTypes.Hierarchy-Reverse", "url": "%s" } }' % (dest_workitem.item_url)
-
-        if self.__send_link_requet(source_workitem.id, data):
+        if source_workitem.add_parent_link(dest_workitem):
             return True
         else:
             return False
@@ -284,9 +272,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
-        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "System.LinkTypes.Hierarchy-Forward", "url": "%s" } }' % (dest_workitem.item_url)
-
-        if self.__send_link_requet(source_workitem.id, data):
+        if source_workitem.add_child_link(dest_workitem):
             return True
         else:
             return False
@@ -306,9 +292,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
-        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "Microsoft.VSTS.Common.Affects-Forward", "url": "%s" } }' % (dest_workitem.item_url)
-
-        if self.__send_link_requet(source_workitem.id, data):
+        if source_workitem.add_affect_link(dest_workitem):
             return True
         else:
             return False
@@ -328,9 +312,7 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
-        data = '{"op": "add", "path": "/relations/-", "value": { "rel": "Microsoft.VSTS.Common.Affects-Reverse", "url": "%s" } }' % (dest_workitem.item_url)
-
-        if self.__send_link_requet(source_workitem.id, data):
+        if source_workitem.add_affected_by_link(dest_workitem):
             return True
         else:
             return False
