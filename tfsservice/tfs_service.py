@@ -117,12 +117,13 @@ class TfsService:
         else:
             return False
     
-    def create_workitem(self, workitem_type, props=None):
+    def create_workitem(self, workitem_type, required_fields, props=None):
         '''Create new tfs workitem with given type
 
         Parameters:
             workitem_type (str): workitem type
-            props (dict(str, str)): dictionary of properties
+            required_fields (dict(str, str)): Required. Dictonary of setted fields.
+            props (dict(str, str)): additional dictionary of properties which will be setted after creating item
         
         Returns:
             workitem (TfsWorkitem): Workitem with properties. None overwise
@@ -131,10 +132,13 @@ class TfsService:
         if not self.__is_connected:
             raise NameError('Disconnected from TFS Service')
 
+        if (required_fields != None) and (not isinstance(required_fields, dict)):
+            raise NameError('required_fields should be dictonary')
+
         if (props != None) and (not isinstance(props, dict)):
             raise NameError('props should be dictonary')
 
-        workitem = self.__tfs_client.create_workitem(workitem_type)
+        workitem = self.__tfs_client.create_workitem(workitem_type, fields=required_fields)
         if workitem:
             wi = TfsWorkitem(workitem)
             
