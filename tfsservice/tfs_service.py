@@ -237,6 +237,37 @@ class TfsService:
             return workitems
         else:
             return None
+    
+    def find_items(self, search_string,
+        wi_fields = ['Id', 'State', 'Title', 'Description']):
+        '''
+        Search items in TFS. Execute WIQL query.
+
+        Parameters:
+            search_string (str): what to search.
+            wi_fields (list of str): list of string where to search
+        
+        Returns:
+            workitem (list of TfsWorkitem): List of workitems. None overwise
+        '''
+        if not wi_fields:
+            raise NameError('Workitem fields is empty')
+
+        if not self.__is_connected:
+            raise NameError('Disconnected from TFS Service')
+
+        fields_str = ', '.join(['[{}]'.format(field) for field in wi_fields])
+        conditionals = ('({field} CONTAINS \'{search})\''.format(field=field, search=search_string) for field in wi_fields)
+        conditional = ' OR '.join(conditionals)
+
+        wiql = '''
+        SELECT {fields}
+        FROM Worktitems
+        WHERE {conditional}
+        ORDER BY [System.Id]
+        '''.format(fields=fields_str, conditional=conditional)
+
+        return self.run_wiql(wiql)
 
     #### https://devopshq.github.io/tfs/advanced.html ####
     ##### https://docs.microsoft.com/ru-ru/rest/api/azure/devops/wit/?view=azure-devops-rest-5.0 ######
